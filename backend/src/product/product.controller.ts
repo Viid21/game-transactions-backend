@@ -9,8 +9,8 @@ export class ProductController {
   ) {}
 
   @Get()
-  getProducts() {
-    return this.productService.getProducts();
+  getProduct() {
+    return this.productService.getProduct();
   }
 
 }
