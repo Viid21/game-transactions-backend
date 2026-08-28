@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class ProductService {
 
-  getProduct() {
+  getProducts() {
     return [
       {
         id: 'sword_001',
