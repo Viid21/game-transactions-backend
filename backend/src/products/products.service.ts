@@ -1,22 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service.js';
 
 @Injectable()
 export class ProductService {
+  constructor(
+    private readonly prismaService: PrismaService,
+  ) {}
 
-  getProducts() {
-    return [
-      {
-        id: 'sword_001',
-        name: 'Iron Sword',
-        price: 1.99,
-        currency: 'EUR',
-      },
-      {
-        id: 'coins_500',
-        name: '500 Coins',
-        price: 4.99,
-        currency: 'EUR',
-      },
-    ];
+  async getProducts() {
+    return this.prismaService.db.orm.public.Product.all();
   }
 }
