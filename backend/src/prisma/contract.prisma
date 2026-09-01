@@ -10,3 +10,12 @@ model Product {
   createdAt    TimestamptzString @default(now())
   updatedAt    temporal.updatedAtString()
 }
+
+model Player {
+  id        String @id @default(uuid())
+  name      String
+  steamId   String
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}

@@ -11,7 +11,7 @@ export class ProductService {
     return this.prismaService.db.orm.public.Product.create(data);
   }
 
-  async getProducts() {
+  async getAllProducts() {
     return this.prismaService.db.orm.public.Product.all();
   }
 

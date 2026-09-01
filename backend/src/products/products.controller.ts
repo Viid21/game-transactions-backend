@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Patch, Delete, Param } from '@nestjs/common';
 import { ProductService } from './products.service.js';
-import { CreateProductDto } from './dto/dto.product-create.js';
-import { UpdateProductDto } from './dto/dto.product-update.js';
+import { CreateProductDto } from './dtoProduct/dto.product-create.js';
+import { UpdateProductDto } from './dtoProduct/dto.product-update.js';
 
 @Controller('api/products')
 export class ProductController {
@@ -17,7 +17,7 @@ export class ProductController {
 
   @Get()
   getAllProducts() {
-    return this.productService.getProducts();
+    return this.productService.getAllProducts();
   }
 
   @Get(':id')
