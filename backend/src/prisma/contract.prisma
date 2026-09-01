@@ -1,7 +1,7 @@
 // use prisma-next
 
 model Product {
-  id           String @id
+  id           String @id @default(uuid())
   name         String
   description  String?
   priceInCents Int

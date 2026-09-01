@@ -163,9 +163,20 @@
     "storageHash": "00be04cf7330e167061004eb76bf75b1f5aa5b2c14cd6af1949ec31db96fd604"
   },
   "execution": {
-    "executionHash": "76e53f2736c142038ab2818401822e0764d98f369ee026cc24ae0b5c431e1625",
+    "executionHash": "7d7e15b30d7ab41c534ef5ad5076eec86d476d65951e29fe83602213a6fca2c0",
     "mutations": {
       "defaults": [
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "product"
+          }
+        },
         {
           "onCreate": {
             "id": "timestampNow",
