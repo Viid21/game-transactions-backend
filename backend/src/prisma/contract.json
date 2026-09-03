@@ -204,17 +204,17 @@
                   "kind": "scalar"
                 }
               },
-              "udername": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
               "updatedAt": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "username": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               }
@@ -231,11 +231,11 @@
                 "steamId": {
                   "column": "steamId"
                 },
-                "udername": {
-                  "column": "udername"
-                },
                 "updatedAt": {
                   "column": "updatedAt"
+                },
+                "username": {
+                  "column": "username"
                 }
               },
               "namespaceId": "public",
@@ -457,6 +457,12 @@
               },
               "foreignKeys": [],
               "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "playerId",
+                  "productId"
+                ]
+              },
               "uniques": []
             },
             "order": {
@@ -536,14 +542,14 @@
                   "nativeType": "text",
                   "nullable": true
                 },
-                "udername": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": false
-                },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "username": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": false
                 }
               },
@@ -675,7 +681,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "a30fc349387838366b88674c3d186adaaac77004197c65ff67f0620ddd8bd3cd"
+    "storageHash": "52e708f11434f9a705feb93482443076e75e27545c2257dff3c77f111fa3ddcf"
   },
   "execution": {
     "executionHash": "6866ce63b9fee21f8bda3f6b71a1102b88cd1802a33c84ed58436a33b3e94eeb",

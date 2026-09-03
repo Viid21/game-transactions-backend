@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'a30fc349387838366b88674c3d186adaaac77004197c65ff67f0620ddd8bd3cd'>;
+  StorageHashBase<'52e708f11434f9a705feb93482443076e75e27545c2257dff3c77f111fa3ddcf'>;
 export type ExecutionHash =
   ExecutionHashBase<'6866ce63b9fee21f8bda3f6b71a1102b88cd1802a33c84ed58436a33b3e94eeb'>;
 export type ProfileHash =
@@ -260,7 +260,7 @@ export type FieldOutputTypes = {
     };
     readonly Player: {
       readonly id: CodecTypes['pg/text@1']['output'];
-      readonly udername: CodecTypes['pg/text@1']['output'];
+      readonly username: CodecTypes['pg/text@1']['output'];
       readonly steamId: CodecTypes['pg/text@1']['output'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -307,7 +307,7 @@ export type FieldInputTypes = {
     };
     readonly Player: {
       readonly id: CodecTypes['pg/text@1']['input'];
-      readonly udername: CodecTypes['pg/text@1']['input'];
+      readonly username: CodecTypes['pg/text@1']['input'];
       readonly steamId: CodecTypes['pg/text@1']['input'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -356,8 +356,8 @@ export type StorageColumnTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly steamId: CodecTypes['pg/text@1']['output'] | null;
-      readonly udername: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly username: CodecTypes['pg/text@1']['output'];
     };
     readonly product: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -403,8 +403,8 @@ export type StorageColumnInputTypes = {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly steamId: CodecTypes['pg/text@1']['input'] | null;
-      readonly udername: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly username: CodecTypes['pg/text@1']['input'];
     };
     readonly product: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -474,6 +474,7 @@ type ContractBase = Omit<
                   readonly nullable: false;
                 };
               };
+              primaryKey: { readonly columns: readonly ['playerId', 'productId'] };
               uniques: readonly [];
               indexes: readonly [];
               foreignKeys: readonly [];
@@ -534,7 +535,7 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
-                readonly udername: {
+                readonly username: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
@@ -783,7 +784,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly udername: {
+              readonly username: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
@@ -812,7 +813,7 @@ type ContractBase = Omit<
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
-                readonly udername: { readonly column: 'udername' };
+                readonly username: { readonly column: 'username' };
                 readonly steamId: { readonly column: 'steamId' };
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly updatedAt: { readonly column: 'updatedAt' };

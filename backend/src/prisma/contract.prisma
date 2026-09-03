@@ -4,7 +4,7 @@ model Product {
   id           String @id @default(uuid())
   name         String
   description  String?
-  type String
+  type         String
   priceInCents Int
   currency     String
 
@@ -51,4 +51,6 @@ model Inventory {
 
   createdAt TimestamptzString @default(now())
   updatedAt temporal.updatedAtString()
+
+  @@id([playerId, productId])
 }
