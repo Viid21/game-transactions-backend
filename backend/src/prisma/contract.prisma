@@ -4,6 +4,7 @@ model Product {
   id           String @id @default(uuid())
   name         String
   description  String?
+  type String
   priceInCents Int
   currency     String
 
@@ -13,8 +14,40 @@ model Product {
 
 model Player {
   id        String @id @default(uuid())
-  name      String
-  steamId   String
+  username  String
+  steamId   String? @unique
+
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
+
+model Order {
+  id            String @id @default(uuid())
+  playerId      String
+  productId     String
+  amountInCents Int
+  currency      String
+  status        String
+
+  createdAt     TimestamptzString @default(now())
+  updatedAt     temporal.updatedAtString()
+}
+
+model Transaction {
+  id                    String @id @default(uuid())
+  orderId               String
+  provider              String
+  providerTransactionId String?
+  status                String
+
+  createdAt             TimestamptzString @default(now())
+  updatedAt             temporal.updatedAtString()
+}
+
+model Inventory {
+  playerId  String
+  productId String
+  quantity  Int
 
   createdAt TimestamptzString @default(now())
   updatedAt temporal.updatedAtString()

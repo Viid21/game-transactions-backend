@@ -1,4 +1,4 @@
 export class UpdatePlayerDto {
-    name?: string;
+    username?: string;
     steamId?: string;
 }

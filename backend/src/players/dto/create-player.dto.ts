@@ -1,4 +1,4 @@
 export class CreatePlayerDto {
-    name: string;
+    username: string;
     steamId: string;
 }
