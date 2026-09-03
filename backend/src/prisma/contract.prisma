@@ -8,6 +8,8 @@ model Product {
   priceInCents Int
   currency     String
 
+  orders       Order[]
+
   createdAt    TimestamptzString @default(now())
   updatedAt    temporal.updatedAtString()
 }
@@ -17,6 +19,8 @@ model Player {
   username  String
   steamId   String? @unique
 
+  orders   Order[]
+  
   createdAt TimestamptzString @default(now())
   updatedAt temporal.updatedAtString()
 }
@@ -29,6 +33,10 @@ model Order {
   currency      String
   status        String
 
+  player        Player  @relation(fields: [playerId], references: [id])
+  product       Product @relation(fields: [productId], references: [id])
+  transactions  Transaction[]
+
   createdAt     TimestamptzString @default(now())
   updatedAt     temporal.updatedAtString()
 }
@@ -40,6 +48,8 @@ model Transaction {
   providerTransactionId String?
   status                String
 
+  order Order @relation(fields: [orderId], references: [id])
+
   createdAt             TimestamptzString @default(now())
   updatedAt             temporal.updatedAtString()
 }
@@ -48,6 +58,9 @@ model Inventory {
   playerId  String
   productId String
   quantity  Int
+
+  player    Player  @relation(fields: [playerId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 
   createdAt TimestamptzString @default(now())
   updatedAt temporal.updatedAtString()
