@@ -5,10 +5,7 @@ import {InventoryService} from './inventories.service.js';
 export class InventoryController {
     constructor(
         private readonly InventoryService: InventoryService,
-    ) {}    
+    ) {} 
 
-    @Get(':id')
-    getInventory(@Param('id') id: string) {
-        return this.InventoryService.getInventoryById(id);
-    }
+    //GET /api/inventories/me
 }
