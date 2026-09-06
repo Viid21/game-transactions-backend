@@ -3,10 +3,14 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { ProductModule } from './products/products.module.js';
 import { PlayerModule } from './players/players.module.js';
-
+import { OrderModule } from './orders/orders.module.js';
+import { InventoryModule } from './inventories/inventories.module.js';
+import { TransactionModule } from './transactions/transactions.module.js';
+import { PrismaModule } from './prisma/prisma.module.js';
+import { AuthModule } from './auth/auth.module.js';
 
 @Module({
-  imports: [ProductModule, PlayerModule],
+  imports: [ProductModule, PlayerModule, OrderModule, InventoryModule, TransactionModule, PrismaModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
