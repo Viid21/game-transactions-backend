@@ -27,8 +27,10 @@ model Player {
 
 model Order {
   id            String @id @default(uuid())
+  providerOrderId String @unique
   playerId      String
   productId     String
+  quantity      Int
   amountInCents Int
   currency      String
   status        String

@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'94181d656359cd29197ee07104a6123e5c6a52943c7b19b2600baffa94673130'>;
+  StorageHashBase<'d425a8c51c9f31009904aca1f8bcbc9f0d1a6bfe6424d176a83fe42f1c8e54af'>;
 export type ExecutionHash =
   ExecutionHashBase<'6866ce63b9fee21f8bda3f6b71a1102b88cd1802a33c84ed58436a33b3e94eeb'>;
 export type ProfileHash =
@@ -250,8 +250,10 @@ export type FieldOutputTypes = {
     };
     readonly Order: {
       readonly id: CodecTypes['pg/text@1']['output'];
+      readonly providerOrderId: CodecTypes['pg/text@1']['output'];
       readonly playerId: CodecTypes['pg/text@1']['output'];
       readonly productId: CodecTypes['pg/text@1']['output'];
+      readonly quantity: CodecTypes['pg/int4@1']['output'];
       readonly amountInCents: CodecTypes['pg/int4@1']['output'];
       readonly currency: CodecTypes['pg/text@1']['output'];
       readonly status: CodecTypes['pg/text@1']['output'];
@@ -297,8 +299,10 @@ export type FieldInputTypes = {
     };
     readonly Order: {
       readonly id: CodecTypes['pg/text@1']['input'];
+      readonly providerOrderId: CodecTypes['pg/text@1']['input'];
       readonly playerId: CodecTypes['pg/text@1']['input'];
       readonly productId: CodecTypes['pg/text@1']['input'];
+      readonly quantity: CodecTypes['pg/int4@1']['input'];
       readonly amountInCents: CodecTypes['pg/int4@1']['input'];
       readonly currency: CodecTypes['pg/text@1']['input'];
       readonly status: CodecTypes['pg/text@1']['input'];
@@ -349,6 +353,8 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly playerId: CodecTypes['pg/text@1']['output'];
       readonly productId: CodecTypes['pg/text@1']['output'];
+      readonly providerOrderId: CodecTypes['pg/text@1']['output'];
+      readonly quantity: CodecTypes['pg/int4@1']['output'];
       readonly status: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
@@ -396,6 +402,8 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly playerId: CodecTypes['pg/text@1']['input'];
       readonly productId: CodecTypes['pg/text@1']['input'];
+      readonly providerOrderId: CodecTypes['pg/text@1']['input'];
+      readonly quantity: CodecTypes['pg/int4@1']['input'];
       readonly status: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
@@ -524,6 +532,11 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
+                readonly providerOrderId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
                 readonly playerId: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
@@ -532,6 +545,11 @@ type ContractBase = Omit<
                 readonly productId: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly quantity: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                 };
                 readonly amountInCents: {
@@ -562,7 +580,7 @@ type ContractBase = Omit<
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [];
+              uniques: readonly [{ readonly columns: readonly ['providerOrderId'] }];
               indexes: readonly [
                 {
                   readonly name: 'order_playerId_idx_710cf1aa';
@@ -846,6 +864,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly providerOrderId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly playerId: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -853,6 +875,10 @@ type ContractBase = Omit<
               readonly productId: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly quantity: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
               readonly amountInCents: {
                 readonly nullable: false;
@@ -921,8 +947,10 @@ type ContractBase = Omit<
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
+                readonly providerOrderId: { readonly column: 'providerOrderId' };
                 readonly playerId: { readonly column: 'playerId' };
                 readonly productId: { readonly column: 'productId' };
+                readonly quantity: { readonly column: 'quantity' };
                 readonly amountInCents: { readonly column: 'amountInCents' };
                 readonly currency: { readonly column: 'currency' };
                 readonly status: { readonly column: 'status' };

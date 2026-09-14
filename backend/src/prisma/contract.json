@@ -165,6 +165,20 @@
                   "kind": "scalar"
                 }
               },
+              "providerOrderId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "quantity": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "status": {
                 "nullable": false,
                 "type": {
@@ -246,6 +260,12 @@
                 },
                 "productId": {
                   "column": "productId"
+                },
+                "providerOrderId": {
+                  "column": "providerOrderId"
+                },
+                "quantity": {
+                  "column": "quantity"
                 },
                 "status": {
                   "column": "status"
@@ -676,6 +696,16 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "providerOrderId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "quantity": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
                 "status": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -744,7 +774,13 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "providerOrderId"
+                  ]
+                }
+              ]
             },
             "player": {
               "columns": {
@@ -932,7 +968,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "94181d656359cd29197ee07104a6123e5c6a52943c7b19b2600baffa94673130"
+    "storageHash": "d425a8c51c9f31009904aca1f8bcbc9f0d1a6bfe6424d176a83fe42f1c8e54af"
   },
   "execution": {
     "executionHash": "6866ce63b9fee21f8bda3f6b71a1102b88cd1802a33c84ed58436a33b3e94eeb",
