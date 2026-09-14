@@ -6,29 +6,21 @@ export class TransactionService {constructor(
     private readonly prismaService: PrismaService,
   ) {}
 
-  async createTransaction(data: any) {
+  async createTransaction(data: {
+    orderId: string;
+    provider: string;
+    providerTransactionId: string;
+    status: string;
+  }) {
     return this.prismaService.db.orm.public.Transaction.create(data);
   }
 
-  async getAllTransactions() {
-    return this.prismaService.db.orm.public.Transaction.all();
-  }
-
-  async getTransactionById(id: string) {
-    return this.prismaService.db.orm.public.Transaction
-      .where({ id })
-      .first();
-  }
-
-  async updateTransaction(id: string, data: any) {
-    return this.prismaService.db.orm.public.Transaction
-      .where({ id })
-      .update(data);
-  }
-
-  async deleteTransaction(id: string) {
-    return this.prismaService.db.orm.public.Transaction
-      .where({ id })
-      .delete();
+  async markOrderPaid(orderId: string, providerTransactionId: string) {
+    const transaction = await this.prismaService.db.orm.public.Transaction.where({ orderId }).first();
+    if (!transaction) return null;
+    return this.prismaService.db.orm.public.Transaction.where({ id: transaction.id }).update({
+      status: 'PAID',
+      providerTransactionId,
+    });
   }
 }

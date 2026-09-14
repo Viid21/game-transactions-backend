@@ -5,5 +5,6 @@ import { PrismaModule } from '../prisma/prisma.module.js';
 @Module({
   imports: [PrismaModule],
   providers: [TransactionService],
+  exports: [TransactionService],
 })
 export class TransactionModule {}
