@@ -5,6 +5,7 @@ model Product {
   name         String
   description  String?
   type         String
+  steamItemId  String?
   priceInCents Int
   currency     String
 

@@ -465,6 +465,13 @@
                   "kind": "scalar"
                 }
               },
+              "steamItemId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "type": {
                 "nullable": false,
                 "type": {
@@ -516,6 +523,9 @@
                 },
                 "priceInCents": {
                   "column": "priceInCents"
+                },
+                "steamItemId": {
+                  "column": "steamItemId"
                 },
                 "type": {
                   "column": "type"
@@ -974,6 +984,11 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "steamItemId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "type": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -1077,7 +1092,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "abce30ab763f0e2bf0978667f814a299ae19bccda134239051600db3885a88e5"
+    "storageHash": "0bc3a1b3b999b0a11327fc600b3263bef61b93940d19943d3d483b8bc9b993c8"
   },
   "execution": {
     "executionHash": "6866ce63b9fee21f8bda3f6b71a1102b88cd1802a33c84ed58436a33b3e94eeb",

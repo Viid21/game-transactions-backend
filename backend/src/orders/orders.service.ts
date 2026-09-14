@@ -33,7 +33,7 @@ export class OrderService {constructor(
       orderId: order.providerOrderId,
       steamId: player.steamId,
       currency: product.currency,
-      items: [{ sku: product.id, description: product.description ?? product.name, quantity: input.quantity, unitAmount: product.priceInCents }],
+      items: [{ sku: product.steamItemId ?? product.id, description: product.description ?? product.name, quantity: input.quantity, unitAmount: product.priceInCents }],
     });
     await this.prismaService.db.orm.public.Transaction.create({
       orderId: order.id,
