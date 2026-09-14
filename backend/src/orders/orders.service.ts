@@ -1,7 +1,5 @@
 import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { InventoryService } from '../inventories/inventories.service.js';
-import { TransactionService } from '../transactions/transactions.service.js';
 import { PAYMENT_PROVIDER, type PaymentProvider } from '../payments/payment-provider.interface.js';
 import type { CreateOrderDto } from './dto/create-order.dto.js';
 import { randomInt } from 'node:crypto';
@@ -9,8 +7,6 @@ import { randomInt } from 'node:crypto';
 @Injectable()
 export class OrderService {constructor(
     private readonly prismaService: PrismaService,
-    private readonly transactionService: TransactionService,
-    private readonly inventoryService: InventoryService,
     @Inject(PAYMENT_PROVIDER) private readonly paymentProvider: PaymentProvider,
   ) {}
 
@@ -39,7 +35,7 @@ export class OrderService {constructor(
       currency: product.currency,
       items: [{ sku: product.id, description: product.description ?? product.name, quantity: input.quantity, unitAmount: product.priceInCents }],
     });
-    await this.transactionService.createTransaction({
+    await this.prismaService.db.orm.public.Transaction.create({
       orderId: order.id,
       provider: 'FAKE',
       providerTransactionId: payment.providerTransactionId,
@@ -55,11 +51,46 @@ export class OrderService {constructor(
     const payment = await this.paymentProvider.finalize(order.providerOrderId);
     if (payment.status !== 'PAID') return { orderId: order.id, status: payment.status };
 
-    // Before production this must be a single database transaction with a unique payment constraint.
-    await this.markOrderPaid(order.id);
-    await this.inventoryService.grant(order.playerId, order.productId, order.quantity);
-    await this.transactionService.markOrderPaid(order.id, payment.providerTransactionId);
-    return { orderId: order.id, status: 'PAID' };
+    try {
+      return await this.prismaService.db.transaction(async (tx) => {
+        const currentOrder = await tx.orm.public.Order.where({ id: order.id }).first();
+        if (!currentOrder) throw new NotFoundException('Order not found');
+        if (currentOrder.status === 'PAID') return { orderId: currentOrder.id, status: 'PAID' as const };
+
+        // Its unique primary key is the durable idempotency claim for this order.
+        await tx.orm.public.Fulfillment.create({ orderId: currentOrder.id });
+
+        const transaction = await tx.orm.public.Transaction.where({ orderId: currentOrder.id }).first();
+        if (!transaction) throw new Error('Payment transaction not found');
+
+        const inventory = await tx.orm.public.Inventory
+          .where({ playerId: currentOrder.playerId, productId: currentOrder.productId })
+          .first();
+
+        if (inventory) {
+          await tx.orm.public.Inventory
+            .where({ playerId: currentOrder.playerId, productId: currentOrder.productId })
+            .update({ quantity: inventory.quantity + currentOrder.quantity });
+        } else {
+          await tx.orm.public.Inventory.create({
+            playerId: currentOrder.playerId,
+            productId: currentOrder.productId,
+            quantity: currentOrder.quantity,
+          });
+        }
+
+        await tx.orm.public.Transaction.where({ id: transaction.id }).update({
+          status: 'PAID',
+          providerTransactionId: payment.providerTransactionId,
+        });
+        await tx.orm.public.Order.where({ id: currentOrder.id }).update({ status: 'PAID' });
+        return { orderId: currentOrder.id, status: 'PAID' as const };
+      });
+    } catch (error) {
+      const latestOrder = await this.getOwnedOrder(playerId, orderId);
+      if (latestOrder.status === 'PAID') return { orderId: latestOrder.id, status: 'PAID' as const };
+      throw error;
+    }
   }
 
   async getOwnedOrder(playerId: string, orderId: string) {
@@ -87,9 +118,4 @@ export class OrderService {constructor(
       .first();
   }
 
-  private async markOrderPaid(id: string) {
-    return this.prismaService.db.orm.public.Order   
-      .where({ id })
-      .update({ status: 'PAID' });
-  }
 }

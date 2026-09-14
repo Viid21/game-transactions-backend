@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'d425a8c51c9f31009904aca1f8bcbc9f0d1a6bfe6424d176a83fe42f1c8e54af'>;
+  StorageHashBase<'abce30ab763f0e2bf0978667f814a299ae19bccda134239051600db3885a88e5'>;
 export type ExecutionHash =
   ExecutionHashBase<'6866ce63b9fee21f8bda3f6b71a1102b88cd1802a33c84ed58436a33b3e94eeb'>;
 export type ProfileHash =
@@ -241,6 +241,10 @@ type DefaultLiteralValue<CodecId extends string, Encoded> = CodecId extends keyo
 
 export type FieldOutputTypes = {
   readonly public: {
+    readonly Fulfillment: {
+      readonly orderId: CodecTypes['pg/text@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
     readonly Inventory: {
       readonly playerId: CodecTypes['pg/text@1']['output'];
       readonly productId: CodecTypes['pg/text@1']['output'];
@@ -290,6 +294,10 @@ export type FieldOutputTypes = {
 };
 export type FieldInputTypes = {
   readonly public: {
+    readonly Fulfillment: {
+      readonly orderId: CodecTypes['pg/text@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
     readonly Inventory: {
       readonly playerId: CodecTypes['pg/text@1']['input'];
       readonly productId: CodecTypes['pg/text@1']['input'];
@@ -339,6 +347,10 @@ export type FieldInputTypes = {
 };
 export type StorageColumnTypes = {
   readonly public: {
+    readonly fulfillment: {
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly orderId: CodecTypes['pg/text@1']['output'];
+    };
     readonly inventory: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly playerId: CodecTypes['pg/text@1']['output'];
@@ -388,6 +400,10 @@ export type StorageColumnTypes = {
 };
 export type StorageColumnInputTypes = {
   readonly public: {
+    readonly fulfillment: {
+      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly orderId: CodecTypes['pg/text@1']['input'];
+    };
     readonly inventory: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly playerId: CodecTypes['pg/text@1']['input'];
@@ -453,6 +469,38 @@ type ContractBase = Omit<
         readonly kind: 'postgres-schema';
         readonly entries: {
           readonly table: {
+            readonly fulfillment: {
+              columns: {
+                readonly orderId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly createdAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['orderId'] };
+              uniques: readonly [];
+              indexes: readonly [];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'fulfillment';
+                    readonly columns: readonly ['orderId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'order';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly inventory: {
               columns: {
                 readonly playerId: {
@@ -783,6 +831,10 @@ type ContractBase = Omit<
     readonly product: { readonly namespace: 'public' & NamespaceId; readonly model: 'Product' };
     readonly player: { readonly namespace: 'public' & NamespaceId; readonly model: 'Player' };
     readonly order: { readonly namespace: 'public' & NamespaceId; readonly model: 'Order' };
+    readonly fulfillment: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'Fulfillment';
+    };
     readonly transaction: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Transaction';
@@ -793,6 +845,42 @@ type ContractBase = Omit<
     readonly namespaces: {
       readonly public: {
         readonly models: {
+          readonly Fulfillment: {
+            readonly fields: {
+              readonly orderId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly order: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Order';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['orderId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'fulfillment';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly orderId: { readonly column: 'orderId' };
+                readonly createdAt: { readonly column: 'createdAt' };
+              };
+            };
+          };
           readonly Inventory: {
             readonly fields: {
               readonly playerId: {
@@ -908,6 +996,17 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
+              readonly fulfillment: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Fulfillment';
+                };
+                readonly cardinality: '1:1';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['orderId'];
+                };
+              };
               readonly player: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;

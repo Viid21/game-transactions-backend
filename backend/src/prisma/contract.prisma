@@ -38,9 +38,17 @@ model Order {
   player        Player  @relation(fields: [playerId], references: [id])
   product       Product @relation(fields: [productId], references: [id])
   transactions  Transaction[]
+  fulfillment   Fulfillment?
 
   createdAt     TimestamptzString @default(now())
   updatedAt     temporal.updatedAtString()
+}
+
+model Fulfillment {
+  orderId String @id
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  createdAt TimestamptzString @default(now())
 }
 
 model Transaction {

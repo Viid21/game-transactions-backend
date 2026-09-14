@@ -4,6 +4,10 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
+    "fulfillment": {
+      "model": "Fulfillment",
+      "namespace": "public"
+    },
     "inventory": {
       "model": "Inventory",
       "namespace": "public"
@@ -29,6 +33,53 @@
     "namespaces": {
       "public": {
         "models": {
+          "Fulfillment": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "orderId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "order": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "orderId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Order",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "orderId": {
+                  "column": "orderId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "fulfillment"
+            }
+          },
           "Inventory": {
             "fields": {
               "createdAt": {
@@ -195,6 +246,21 @@
               }
             },
             "relations": {
+              "fulfillment": {
+                "cardinality": "1:1",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "orderId"
+                  ]
+                },
+                "to": {
+                  "model": "Fulfillment",
+                  "namespace": "public"
+                }
+              },
               "player": {
                 "cardinality": "N:1",
                 "on": {
@@ -568,6 +634,49 @@
       "public": {
         "entries": {
           "table": {
+            "fulfillment": {
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "orderId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "orderId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "fulfillment"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "order"
+                  }
+                }
+              ],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "orderId"
+                ]
+              },
+              "uniques": []
+            },
             "inventory": {
               "columns": {
                 "createdAt": {
@@ -968,7 +1077,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "d425a8c51c9f31009904aca1f8bcbc9f0d1a6bfe6424d176a83fe42f1c8e54af"
+    "storageHash": "abce30ab763f0e2bf0978667f814a299ae19bccda134239051600db3885a88e5"
   },
   "execution": {
     "executionHash": "6866ce63b9fee21f8bda3f6b71a1102b88cd1802a33c84ed58436a33b3e94eeb",
