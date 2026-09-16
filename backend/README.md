@@ -30,7 +30,7 @@ npx prisma db update --dry-run
 npx prisma db update
 ```
 
-Never commit `.env`, Steam keys, or production database URLs.
+Never commit `.env`, Steam keys, or production database URLs. `JWT_SECRET` must be at least 32 characters. PostgreSQL is bound to `127.0.0.1` so it is reachable from the host for local development but not exposed to the network.
 
 ## Creating a fork for a game
 

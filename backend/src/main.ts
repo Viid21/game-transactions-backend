@@ -37,6 +37,7 @@ function validateEnvironment() {
   for (const name of required) {
     if (!process.env[name]) throw new Error(`${name} is required`);
   }
+  if (process.env.JWT_SECRET!.length < 32) throw new Error('JWT_SECRET must be at least 32 characters long');
 
   const authProvider = process.env.AUTH_PROVIDER ?? 'fake';
   const paymentProvider = process.env.PAYMENT_PROVIDER ?? 'fake';
