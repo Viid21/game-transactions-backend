@@ -1,19 +1,64 @@
 services:
   postgres:
-    image: postgres:16
-    container_name: game-transactions-postgres
+    image: postgres:16-alpine
     restart: unless-stopped
 
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: game_transactions
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_DB: ${POSTGRES_DB:-game_transactions}
 
     ports:
       - "5432:5432"
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    build:
+      context: .
+      target: build
+    command: npx prisma db migrate
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-game_transactions}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      target: runner
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-game_transactions}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      PORT: ${PORT:-3000}
+      AUTH_PROVIDER: ${AUTH_PROVIDER:-fake}
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-fake}
+      STEAM_APP_ID: ${STEAM_APP_ID:-}
+      STEAM_AUTH_KEY: ${STEAM_AUTH_KEY:-}
+      STEAM_AUTH_IDENTITY: ${STEAM_AUTH_IDENTITY:-}
+      STEAM_MICROTXN_KEY: ${STEAM_MICROTXN_KEY:-}
+      STEAM_MICROTXN_SANDBOX: ${STEAM_MICROTXN_SANDBOX:-true}
+      STEAM_LANGUAGE: ${STEAM_LANGUAGE:-en}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "${PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

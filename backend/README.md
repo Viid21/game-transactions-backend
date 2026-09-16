@@ -8,7 +8,15 @@ Requirements: Node.js, Docker Desktop, and Docker Compose.
 
 ```bash
 cp .env.example .env
-docker compose up -d
+docker compose up --build
+```
+
+Docker Compose starts PostgreSQL, waits for it to be ready, applies the versioned migrations once, and then starts the API at `http://localhost:3000`. Check its health with `GET /health`.
+
+For local development without containerising the API, start only PostgreSQL and use the host commands:
+
+```bash
+docker compose up -d postgres
 npm install
 npm run contract:emit
 npx prisma db migrate
