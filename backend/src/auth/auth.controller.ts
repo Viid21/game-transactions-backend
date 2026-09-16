@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 
 import { AuthService } from './auth.service.js';
-import type { AuthCredentials } from './providers/auth-provider.interface.js';
+import { AuthenticateDto } from './dto/authenticate.dto.js';
 
 @Controller('api/auth')
 export class AuthController {
@@ -11,7 +11,7 @@ export class AuthController {
     ) {}
 
     @Post()
-    authenticate(@Body() credentials: AuthCredentials) {
+    authenticate(@Body() credentials: AuthenticateDto) {
         return this.authService.authenticate(credentials);
     }
 }
