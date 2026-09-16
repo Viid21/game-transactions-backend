@@ -62,14 +62,28 @@ For Steam payments set `PAYMENT_PROVIDER=steam`, `STEAM_APP_ID`, and `STEAM_MICR
 ## API flow
 
 ```text
-POST /api/auth                         { ticket }
-GET  /api/products
-POST /api/orders                       { productId, quantity }
-POST /api/orders/:id/confirm
-GET  /api/inventories/me
+Unity                         Steam                         Backend
+ |                              |                              |
+ |-- GetAuthSessionTicket() --->|                              |
+ |-- POST /api/auth {ticket} ---------------------------------->| validate ticket
+ |<------------------------------ JWT -------------------------|
+ |-- GET /api/products ---------------------------------------->|
+ |<------------------------------ catalogue -------------------|
+ |-- POST /api/orders {productId, quantity} ------------------->| creates the order
+ |<------------------------------ 201 + order id --------------|
+ |                              |<-----------------------------| InitTxn
+ |<-- Steam overlay; player authorises ------------------------|
+ |<-- Steamworks callback: transaction authorised -------------|
+ |-- POST /api/orders/:id/confirm ----------------------------->| FinalizeTxn + grant item
+ |<------------------------------ paid order ------------------|
+ |-- GET /api/inventories/me ---------------------------------->|
 ```
 
-All endpoints after authentication require `Authorization: Bearer <accessToken>`. Unity creates and confirms orders against this API; it never receives Steam publisher keys or sets prices/statuses itself.
+For the Steam providers, Unity must include the Steamworks SDK. It uses `GetAuthSessionTicket()` to obtain the authentication ticket and Steam's microtransaction/overlay flow to let the player authorise the purchase. Steamworks delivers the authorisation callback to the Unity game client, not directly to this backend. The ticket is sent to `POST /api/auth`; it is not a password and the Steam publisher keys never leave the backend.
+
+`POST /api/orders` is the endpoint that **creates the order**. Unity sends only `productId` and `quantity`; the backend obtains the price and Steam item data from its own catalogue, so the client cannot choose a price or mark an order as paid. Its `201` response includes the order id, which Unity retains. `POST /api/orders/:id/confirm` is called only after Unity has received Steamworks' authorisation callback for that order. It does not trust Unity's claim: the backend calls Steam's `FinalizeTxn` and grants the item only if Steam accepts it. Calling confirmation again is safe and does not grant the item twice.
+
+All endpoints after authentication require `Authorization: Bearer <accessToken>`. With the fake providers, the same endpoint sequence is used, which lets Unity keep its integration unchanged when the fork switches to Steam.
 
 ## Tests
 
