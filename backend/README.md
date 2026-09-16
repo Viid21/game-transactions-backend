@@ -32,6 +32,19 @@ npx prisma db update
 
 Never commit `.env`, Steam keys, or production database URLs.
 
+## Creating a fork for a game
+
+This repository is the reusable base. Create a fork before adding game-specific products, Steamworks credentials, domains, or deployment infrastructure.
+
+1. Copy `.env.example` to `.env` and replace every placeholder secret. Do not reuse the base project's database or JWT secret.
+2. Start the stack with `docker compose up --build`. PostgreSQL and the API are ready when `GET /health` returns `{ "status": "ok" }`.
+3. Load the fork's catalogue through a private seed/admin script or a database migration. The public API intentionally exposes products as read-only. A product needs `name`, `type`, `priceInCents`, and `currency`; add its numeric `steamItemId` before enabling Steam payments.
+4. Keep `AUTH_PROVIDER=fake` and `PAYMENT_PROVIDER=fake` while developing. Unity's API contract does not change when a fork switches providers.
+5. When the fork is ready for Steam Sandbox, set its own `STEAM_APP_ID`, `STEAM_AUTH_KEY`, `STEAM_AUTH_IDENTITY`, and `STEAM_MICROTXN_KEY`. These credentials belong only in that fork's deployment secrets.
+6. Before public hosting, set the fork's `CORS_ORIGINS` if it has browser clients, configure its proxy setting, and use an appropriate rate limit.
+
+For any schema change, emit the contract and create a new migration; never edit an applied migration. Preview existing-database changes with `npx prisma db update --dry-run` before applying them.
+
 ## Public deployment
 
 By default, only 100 requests per IP per minute are accepted; configure `RATE_LIMIT_WINDOW_MS` and `RATE_LIMIT_MAX` for the expected traffic. The in-memory limiter is appropriate for this single-container Compose deployment. If a fork runs multiple API replicas, place a shared rate limiter at the reverse proxy or use a shared store.
