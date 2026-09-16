@@ -3,6 +3,7 @@ import {
     AuthProvider,
     AuthResult,
 } from './auth-provider.interface.js';
+import { UnauthorizedException } from '@nestjs/common';
 
 export class FakeAuthProvider implements AuthProvider {
 
@@ -18,7 +19,7 @@ export class FakeAuthProvider implements AuthProvider {
         const steamId = this.fakeUsers.get(credentials.ticket);
 
         if (!steamId) {
-            throw new Error('Invalid authentication ticket');
+            throw new UnauthorizedException('Invalid authentication ticket');
         }
 
         return {

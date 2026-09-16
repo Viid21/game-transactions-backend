@@ -10,7 +10,7 @@ export class AuthController {
         private readonly authService: AuthService,
     ) {}
 
-    @Post('fake')
+    @Post()
     authenticate(@Body() credentials: AuthCredentials) {
         return this.authService.authenticate(credentials);
     }
