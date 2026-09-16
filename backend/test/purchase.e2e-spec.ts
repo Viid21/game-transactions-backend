@@ -23,7 +23,7 @@ describe('purchase flow (e2e)', () => {
     process.env.AUTH_PROVIDER = 'fake';
     process.env.PAYMENT_PROVIDER = 'fake';
     process.env.JWT_SECRET = 'e2e-test-secret';
-    await execFileAsync(process.execPath, ['node_modules/prisma/dist/prisma.js', 'db', 'init', '--db', process.env.DATABASE_URL], {
+    await execFileAsync(process.execPath, ['node_modules/prisma/dist/prisma.js', 'db', 'migrate', '--db', process.env.DATABASE_URL], {
       cwd: process.cwd(),
     });
 

@@ -18,7 +18,7 @@ describe('OrderService integration', () => {
       .start();
     process.env.DATABASE_URL = container.getConnectionUri();
 
-    await execFileAsync(process.execPath, ['node_modules/prisma/dist/prisma.js', 'db', 'init', '--db', process.env.DATABASE_URL], {
+    await execFileAsync(process.execPath, ['node_modules/prisma/dist/prisma.js', 'db', 'migrate', '--db', process.env.DATABASE_URL], {
       cwd: process.cwd(),
     });
 
