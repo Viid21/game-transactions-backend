@@ -22,6 +22,7 @@ interface SteamResponse {
 }
 
 export class SteamPaymentProvider implements PaymentProvider {
+  readonly name = 'STEAM' as const;
   constructor(private readonly config: SteamPaymentConfig) {}
 
   async initiate(input: InitiatePaymentInput): Promise<InitiatePaymentResult> {
@@ -73,11 +74,19 @@ export class SteamPaymentProvider implements PaymentProvider {
 
   private async call(path: string, init: RequestInit) {
     const interfaceName = this.config.sandbox ? 'ISteamMicroTxnSandbox' : 'ISteamMicroTxn';
-    const response = await fetch(`https://partner.steam-api.com/${interfaceName}/${path}`, init);
-    const payload = await response.json() as SteamResponse;
-    if (!response.ok || payload.response?.result !== 'OK') {
-      throw new BadGatewayException(payload.response?.error?.errordesc ?? 'Steam microtransaction request failed');
+    try {
+      const response = await fetch(`https://partner.steam-api.com/${interfaceName}/${path}`, {
+        ...init,
+        signal: AbortSignal.timeout(10_000),
+      });
+      const payload = await response.json() as SteamResponse;
+      if (!response.ok || payload.response?.result !== 'OK') {
+        throw new BadGatewayException('Steam microtransaction request failed');
+      }
+      return payload.response;
+    } catch (error) {
+      if (error instanceof BadGatewayException) throw error;
+      throw new BadGatewayException('Steam microtransaction service is unavailable');
     }
-    return payload.response;
   }
 }

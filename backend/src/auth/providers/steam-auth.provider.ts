@@ -25,11 +25,18 @@ export class SteamAuthProvider implements AuthProvider {
       identity: this.config.identity,
       format: 'json',
     });
-    const response = await fetch(`https://partner.steam-api.com/ISteamUserAuth/AuthenticateUserTicket/v1/?${query}`);
-    const payload = await response.json() as SteamAuthResponse;
-    const steamId = payload.response?.params?.steamid;
-    if (response.ok && steamId) return { steamId };
-    if (response.status >= 500) throw new BadGatewayException('Steam authentication is unavailable');
-    throw new UnauthorizedException(payload.response?.error?.errordesc ?? 'Invalid Steam authentication ticket');
+    try {
+      const response = await fetch(`https://partner.steam-api.com/ISteamUserAuth/AuthenticateUserTicket/v1/?${query}`, {
+        signal: AbortSignal.timeout(10_000),
+      });
+      const payload = await response.json() as SteamAuthResponse;
+      const steamId = payload.response?.params?.steamid;
+      if (response.ok && steamId) return { steamId };
+      if (response.status >= 500) throw new BadGatewayException('Steam authentication is unavailable');
+      throw new UnauthorizedException('Invalid Steam authentication ticket');
+    } catch (error) {
+      if (error instanceof BadGatewayException || error instanceof UnauthorizedException) throw error;
+      throw new BadGatewayException('Steam authentication is unavailable');
+    }
   }
 }

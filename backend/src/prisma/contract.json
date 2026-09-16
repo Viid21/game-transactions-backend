@@ -1069,22 +1069,19 @@
                   }
                 }
               ],
-              "indexes": [
-                {
-                  "columns": [
-                    "orderId"
-                  ],
-                  "name": "transaction_orderId_idx_d284871b",
-                  "prefix": "transaction_orderId_idx",
-                  "unique": false
-                }
-              ],
+              "indexes": [],
               "primaryKey": {
                 "columns": [
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "orderId"
+                  ]
+                }
+              ]
             }
           }
         },
@@ -1092,7 +1089,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "0bc3a1b3b999b0a11327fc600b3263bef61b93940d19943d3d483b8bc9b993c8"
+    "storageHash": "3bb85dc5243e7f8b2c5a789c053b600b6fad8669a5afacd6b4cc99e68ec37c79"
   },
   "execution": {
     "executionHash": "6866ce63b9fee21f8bda3f6b71a1102b88cd1802a33c84ed58436a33b3e94eeb",

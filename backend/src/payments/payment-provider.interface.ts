@@ -26,6 +26,7 @@ export interface FinalizePaymentResult {
 }
 
 export interface PaymentProvider {
+  readonly name: 'FAKE' | 'STEAM';
   initiate(input: InitiatePaymentInput): Promise<InitiatePaymentResult>;
   finalize(orderId: string): Promise<FinalizePaymentResult>;
   query(orderId: string): Promise<FinalizePaymentResult>;

@@ -1,0 +1,83 @@
+[
+  {
+    "id": "dropIndex.transaction.transaction_orderId_idx_d284871b",
+    "label": "Drop index \"transaction_orderId_idx_d284871b\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "transaction_orderId_idx_d284871b",
+        "table": "transaction"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"transaction_orderId_idx_d284871b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"transaction_orderId_idx_d284871b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop index \"transaction_orderId_idx_d284871b\"",
+        "sql": "DROP INDEX \"public\".\"transaction_orderId_idx_d284871b\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"transaction_orderId_idx_d284871b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"transaction_orderId_idx_d284871b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.transaction.transaction_orderId_key",
+    "label": "Add unique constraint on \"transaction\" (orderId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "transaction_orderId_key",
+        "table": "transaction"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"transaction_orderId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "transaction_orderId_key",
+          "public",
+          "\"public\".\"transaction\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"transaction_orderId_key\"",
+        "sql": "ALTER TABLE \"public\".\"transaction\" ADD CONSTRAINT \"transaction_orderId_key\" UNIQUE (\"orderId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"transaction_orderId_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "transaction_orderId_key",
+          "public",
+          "\"public\".\"transaction\""
+        ]
+      }
+    ]
+  }
+]

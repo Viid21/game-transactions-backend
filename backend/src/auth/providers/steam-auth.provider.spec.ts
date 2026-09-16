@@ -14,7 +14,7 @@ describe('SteamAuthProvider', () => {
     fetchMock.mockResolvedValue(new Response(JSON.stringify({ response: { params: { steamid: '76561198000000001' } } }), { status: 200 }));
 
     await expect(provider.authenticate({ ticket: 'ab12' })).resolves.toEqual({ steamId: '76561198000000001' });
-    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('AuthenticateUserTicket/v1/?'));
+    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('AuthenticateUserTicket/v1/?'), expect.objectContaining({ signal: expect.any(AbortSignal) }));
     expect(fetchMock.mock.calls[0][0]).toContain('identity=game-backend');
   });
 });

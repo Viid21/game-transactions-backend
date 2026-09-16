@@ -8,6 +8,7 @@ import type {
 
 @Injectable()
 export class FakePaymentProvider implements PaymentProvider {
+  readonly name = 'FAKE' as const;
   private readonly payments = new Map<string, FinalizePaymentResult>();
 
   async initiate(input: InitiatePaymentInput): Promise<InitiatePaymentResult> {

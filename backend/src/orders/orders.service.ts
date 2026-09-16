@@ -37,7 +37,7 @@ export class OrderService {constructor(
     });
     await this.prismaService.db.orm.public.Transaction.create({
       orderId: order.id,
-      provider: 'FAKE',
+      provider: this.paymentProvider.name,
       providerTransactionId: payment.providerTransactionId,
       status: payment.status,
     });

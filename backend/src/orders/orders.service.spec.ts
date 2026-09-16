@@ -15,7 +15,7 @@ describe('OrderService', () => {
         Transaction: { create: vi.fn() },
       } } },
     };
-    const payment = { initiate: vi.fn().mockResolvedValue({ providerTransactionId: 'fake-txn-order-1', status: 'PENDING', authorizationUrl: 'fake-payment://authorize/order-1' }) };
+    const payment = { name: 'FAKE' as const, initiate: vi.fn().mockResolvedValue({ providerTransactionId: 'fake-txn-order-1', status: 'PENDING', authorizationUrl: 'fake-payment://authorize/order-1' }) };
     const service = new OrderService(prisma as never, payment as never);
 
     await expect(service.createPurchase('player-1', { productId: 'coins', quantity: 2 })).resolves.toEqual({
@@ -23,7 +23,7 @@ describe('OrderService', () => {
     });
     expect(create).toHaveBeenCalledWith(expect.objectContaining({ amountInCents: 398, quantity: 2, status: 'PENDING' }));
     expect(payment.initiate).toHaveBeenCalledWith(expect.objectContaining({ steamId: '76561198000000001', orderId: '123456789' }));
-    expect(prisma.db.orm.public.Transaction.create).toHaveBeenCalledWith(expect.objectContaining({ orderId: 'order-1' }));
+    expect(prisma.db.orm.public.Transaction.create).toHaveBeenCalledWith(expect.objectContaining({ orderId: 'order-1', provider: 'FAKE' }));
   });
 
   it('rejects invalid quantities before creating an order', async () => {

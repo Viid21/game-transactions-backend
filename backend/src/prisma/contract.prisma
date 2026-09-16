@@ -54,7 +54,7 @@ model Fulfillment {
 
 model Transaction {
   id                    String @id @default(uuid())
-  orderId               String
+  orderId               String @unique
   provider              String
   providerTransactionId String?
   status                String
