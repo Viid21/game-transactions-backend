@@ -32,6 +32,12 @@ npx prisma db update
 
 Never commit `.env`, Steam keys, or production database URLs.
 
+## Public deployment
+
+By default, only 100 requests per IP per minute are accepted; configure `RATE_LIMIT_WINDOW_MS` and `RATE_LIMIT_MAX` for the expected traffic. The in-memory limiter is appropriate for this single-container Compose deployment. If a fork runs multiple API replicas, place a shared rate limiter at the reverse proxy or use a shared store.
+
+`CORS_ORIGINS` is disabled by default because Unity does not need browser CORS. If a fork adds a browser client or admin panel, set it to its comma-separated, full origins (for example, `https://admin.example.com`), never `*`. Set `TRUST_PROXY=true` only behind a reverse proxy you control, so IP rate limiting uses the actual client IP.
+
 ## Providers
 
 Local development defaults to `AUTH_PROVIDER=fake` and `PAYMENT_PROVIDER=fake`.

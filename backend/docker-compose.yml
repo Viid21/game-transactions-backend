@@ -41,6 +41,10 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:-game_transactions}
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
       PORT: ${PORT:-3000}
+      CORS_ORIGINS: ${CORS_ORIGINS:-}
+      TRUST_PROXY: ${TRUST_PROXY:-false}
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-60000}
+      RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-100}
       AUTH_PROVIDER: ${AUTH_PROVIDER:-fake}
       PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-fake}
       STEAM_APP_ID: ${STEAM_APP_ID:-}
