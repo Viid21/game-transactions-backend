@@ -1,0 +1,784 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.fulfillment",
+    "label": "Create table \"fulfillment\"",
+    "summary": "Creates table \"fulfillment\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "fulfillment"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"fulfillment\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"fulfillment\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"fulfillment\"",
+        "sql": "CREATE TABLE \"public\".\"fulfillment\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"orderId\" text NOT NULL,\n  PRIMARY KEY (\"orderId\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"fulfillment\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"fulfillment\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.inventory",
+    "label": "Create table \"inventory\"",
+    "summary": "Creates table \"inventory\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "inventory"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"inventory\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"inventory\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"inventory\"",
+        "sql": "CREATE TABLE \"public\".\"inventory\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"playerId\" text NOT NULL,\n  \"productId\" text NOT NULL,\n  \"quantity\" int4 NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"playerId\", \"productId\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"inventory\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"inventory\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.order",
+    "label": "Create table \"order\"",
+    "summary": "Creates table \"order\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "order"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"order\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"order\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"order\"",
+        "sql": "CREATE TABLE \"public\".\"order\" (\n  \"amountInCents\" int4 NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"currency\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"playerId\" text NOT NULL,\n  \"productId\" text NOT NULL,\n  \"providerOrderId\" text NOT NULL,\n  \"quantity\" int4 NOT NULL,\n  \"status\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"order\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"order\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.player",
+    "label": "Create table \"player\"",
+    "summary": "Creates table \"player\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "player"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"player\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"player\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"player\"",
+        "sql": "CREATE TABLE \"public\".\"player\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"steamId\" text,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"username\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"player\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"player\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.product",
+    "label": "Create table \"product\"",
+    "summary": "Creates table \"product\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "product"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"product\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"product\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"product\"",
+        "sql": "CREATE TABLE \"public\".\"product\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"currency\" text NOT NULL,\n  \"description\" text,\n  \"id\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"priceInCents\" int4 NOT NULL,\n  \"steamItemId\" text,\n  \"type\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"product\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"product\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.transaction",
+    "label": "Create table \"transaction\"",
+    "summary": "Creates table \"transaction\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "transaction"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"transaction\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"transaction\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"transaction\"",
+        "sql": "CREATE TABLE \"public\".\"transaction\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"orderId\" text NOT NULL,\n  \"provider\" text NOT NULL,\n  \"providerTransactionId\" text,\n  \"status\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"transaction\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"transaction\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.order.order_providerOrderId_key",
+    "label": "Add unique constraint on \"order\" (providerOrderId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "order_providerOrderId_key",
+        "table": "order"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"order_providerOrderId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "order_providerOrderId_key",
+          "public",
+          "\"public\".\"order\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"order_providerOrderId_key\"",
+        "sql": "ALTER TABLE \"public\".\"order\" ADD CONSTRAINT \"order_providerOrderId_key\" UNIQUE (\"providerOrderId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"order_providerOrderId_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "order_providerOrderId_key",
+          "public",
+          "\"public\".\"order\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.player.player_steamId_key",
+    "label": "Add unique constraint on \"player\" (steamId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "player_steamId_key",
+        "table": "player"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"player_steamId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "player_steamId_key",
+          "public",
+          "\"public\".\"player\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"player_steamId_key\"",
+        "sql": "ALTER TABLE \"public\".\"player\" ADD CONSTRAINT \"player_steamId_key\" UNIQUE (\"steamId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"player_steamId_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "player_steamId_key",
+          "public",
+          "\"public\".\"player\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.inventory.inventory_playerId_idx_710cf1aa",
+    "label": "Create index \"inventory_playerId_idx_710cf1aa\" on \"inventory\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "inventory_playerId_idx_710cf1aa",
+        "table": "inventory"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"inventory_playerId_idx_710cf1aa\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"inventory_playerId_idx_710cf1aa\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"inventory_playerId_idx_710cf1aa\"",
+        "sql": "CREATE INDEX \"inventory_playerId_idx_710cf1aa\" ON \"public\".\"inventory\" (\"playerId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"inventory_playerId_idx_710cf1aa\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"inventory_playerId_idx_710cf1aa\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.inventory.inventory_productId_idx_5858600a",
+    "label": "Create index \"inventory_productId_idx_5858600a\" on \"inventory\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "inventory_productId_idx_5858600a",
+        "table": "inventory"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"inventory_productId_idx_5858600a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"inventory_productId_idx_5858600a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"inventory_productId_idx_5858600a\"",
+        "sql": "CREATE INDEX \"inventory_productId_idx_5858600a\" ON \"public\".\"inventory\" (\"productId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"inventory_productId_idx_5858600a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"inventory_productId_idx_5858600a\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.order.order_playerId_idx_710cf1aa",
+    "label": "Create index \"order_playerId_idx_710cf1aa\" on \"order\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "order_playerId_idx_710cf1aa",
+        "table": "order"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"order_playerId_idx_710cf1aa\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"order_playerId_idx_710cf1aa\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"order_playerId_idx_710cf1aa\"",
+        "sql": "CREATE INDEX \"order_playerId_idx_710cf1aa\" ON \"public\".\"order\" (\"playerId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"order_playerId_idx_710cf1aa\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"order_playerId_idx_710cf1aa\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.order.order_productId_idx_5858600a",
+    "label": "Create index \"order_productId_idx_5858600a\" on \"order\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "order_productId_idx_5858600a",
+        "table": "order"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"order_productId_idx_5858600a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"order_productId_idx_5858600a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"order_productId_idx_5858600a\"",
+        "sql": "CREATE INDEX \"order_productId_idx_5858600a\" ON \"public\".\"order\" (\"productId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"order_productId_idx_5858600a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"order_productId_idx_5858600a\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.transaction.transaction_orderId_idx_d284871b",
+    "label": "Create index \"transaction_orderId_idx_d284871b\" on \"transaction\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "transaction_orderId_idx_d284871b",
+        "table": "transaction"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"transaction_orderId_idx_d284871b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"transaction_orderId_idx_d284871b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"transaction_orderId_idx_d284871b\"",
+        "sql": "CREATE INDEX \"transaction_orderId_idx_d284871b\" ON \"public\".\"transaction\" (\"orderId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"transaction_orderId_idx_d284871b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"transaction_orderId_idx_d284871b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.fulfillment.fulfillment_orderId_fkey",
+    "label": "Add foreign key \"fulfillment_orderId_fkey\" on \"fulfillment\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "fulfillment_orderId_fkey",
+        "table": "fulfillment"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"fulfillment_orderId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "fulfillment_orderId_fkey",
+          "public",
+          "\"public\".\"fulfillment\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"fulfillment_orderId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"fulfillment\"\nADD CONSTRAINT \"fulfillment_orderId_fkey\"\nFOREIGN KEY (\"orderId\")\nREFERENCES \"public\".\"order\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"fulfillment_orderId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "fulfillment_orderId_fkey",
+          "public",
+          "\"public\".\"fulfillment\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.inventory.inventory_playerId_fkey",
+    "label": "Add foreign key \"inventory_playerId_fkey\" on \"inventory\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "inventory_playerId_fkey",
+        "table": "inventory"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"inventory_playerId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "inventory_playerId_fkey",
+          "public",
+          "\"public\".\"inventory\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"inventory_playerId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"inventory\"\nADD CONSTRAINT \"inventory_playerId_fkey\"\nFOREIGN KEY (\"playerId\")\nREFERENCES \"public\".\"player\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"inventory_playerId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "inventory_playerId_fkey",
+          "public",
+          "\"public\".\"inventory\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.inventory.inventory_productId_fkey",
+    "label": "Add foreign key \"inventory_productId_fkey\" on \"inventory\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "inventory_productId_fkey",
+        "table": "inventory"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"inventory_productId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "inventory_productId_fkey",
+          "public",
+          "\"public\".\"inventory\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"inventory_productId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"inventory\"\nADD CONSTRAINT \"inventory_productId_fkey\"\nFOREIGN KEY (\"productId\")\nREFERENCES \"public\".\"product\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"inventory_productId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "inventory_productId_fkey",
+          "public",
+          "\"public\".\"inventory\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.order.order_playerId_fkey",
+    "label": "Add foreign key \"order_playerId_fkey\" on \"order\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "order_playerId_fkey",
+        "table": "order"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"order_playerId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "order_playerId_fkey",
+          "public",
+          "\"public\".\"order\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"order_playerId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"order\"\nADD CONSTRAINT \"order_playerId_fkey\"\nFOREIGN KEY (\"playerId\")\nREFERENCES \"public\".\"player\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"order_playerId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "order_playerId_fkey",
+          "public",
+          "\"public\".\"order\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.order.order_productId_fkey",
+    "label": "Add foreign key \"order_productId_fkey\" on \"order\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "order_productId_fkey",
+        "table": "order"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"order_productId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "order_productId_fkey",
+          "public",
+          "\"public\".\"order\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"order_productId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"order\"\nADD CONSTRAINT \"order_productId_fkey\"\nFOREIGN KEY (\"productId\")\nREFERENCES \"public\".\"product\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"order_productId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "order_productId_fkey",
+          "public",
+          "\"public\".\"order\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.transaction.transaction_orderId_fkey",
+    "label": "Add foreign key \"transaction_orderId_fkey\" on \"transaction\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "transaction_orderId_fkey",
+        "table": "transaction"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"transaction_orderId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "transaction_orderId_fkey",
+          "public",
+          "\"public\".\"transaction\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"transaction_orderId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"transaction\"\nADD CONSTRAINT \"transaction_orderId_fkey\"\nFOREIGN KEY (\"orderId\")\nREFERENCES \"public\".\"order\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"transaction_orderId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "transaction_orderId_fkey",
+          "public",
+          "\"public\".\"transaction\""
+        ]
+      }
+    ]
+  }
+]

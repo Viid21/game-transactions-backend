@@ -11,7 +11,7 @@ cp .env.example .env
 docker compose up -d
 npm install
 npm run contract:emit
-npx prisma db init
+npx prisma db migrate
 npm run start:dev
 ```
 
