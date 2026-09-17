@@ -1,3 +1,4 @@
+![Banner](docs/images/steam_unity_github.png)
 # Game Transactions Backend
 
 A reusable starting point for a Unity game's Steam-authenticated catalogue, microtransactions, and inventory. It lets a project use fake authentication and payments during development, then switch to Steam without changing the API Unity calls.
@@ -30,3 +31,4 @@ Fork this repository before adding game-specific products, Steamworks credential
 ## Technical documentation
 
 The backend has its own, more detailed guide: [backend/README.md](./backend/README.md). It explains local setup, Docker, environment variables, API endpoints, the Unity/Steam purchase flow, provider configuration, migrations, deployment considerations, and tests.
+![Game Transactions Backend architecture](docs/images/diagram.png)
